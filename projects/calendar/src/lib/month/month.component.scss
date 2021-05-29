@@ -1,0 +1,49 @@
+@import "../calendar-constants";
+@import "../calendar-mixins";
+
+:host-context(.calendar--disabled) > * {
+  opacity: .38;
+  cursor: initial;
+}
+
+.month {
+  @include calendarGrid();
+
+  @each $first-day-of-week, $days-of-week in $first-day-of-week-to-days-of-week {
+    @each $day-of-week in $days-of-week {
+      :host-context(.calendar--first-day-of-week-#{$first-day-of-week}) &--first-day-#{$day-of-week} {
+        time:first-child {
+          // flex item fallback
+          margin-left: (index($days-of-week, $day-of-week) - 1) * $calendar-cell-size--accessible;
+          // grid item
+          grid-column: index($days-of-week, $day-of-week);
+          @supports (display: grid) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  &__date {
+    @include calendarGridCell();
+    cursor: pointer;
+
+    &--active {
+      background-color: rgba(chocolate, .4);
+    }
+
+    &--selected {
+      background-color: chocolate;
+      color: white;
+    }
+
+    &--disabled {
+      opacity: .38;
+    }
+
+    :host-context(.calendar--disabled) & {
+      cursor: initial;
+    }
+  }
+}

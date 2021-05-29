@@ -1,0 +1,13 @@
+@import "projects/shared-scss/utils";
+
+.fieldset {
+  margin: pxToRem(8px);
+}
+
+.form-control {
+  margin-bottom: pxToRem(8px);
+
+  &__label {
+    padding-right: pxToRem(8px);
+  }
+}
