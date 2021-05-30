@@ -2,15 +2,3 @@
   $size-in-pixels: if(unitless($size), $size * 1px, $size);
   @return ($size-in-pixels / $base-font-size) * 1rem;
 }
-
-.fieldset {
-  margin: pxToRem(8px);
-}
-
-.form-control {
-  margin-bottom: pxToRem(8px);
-
-  &__label {
-    padding-right: pxToRem(8px);
-  }
-}

@@ -6,7 +6,7 @@ import { CalendarComponent } from './calendar.component';
 import { MonthComponent } from './month/month.component';
 import { DaysOfWeekComponent } from './days-of-week/days-of-week.component';
 import { MonthHeaderComponent } from './month-header/month-header.component';
-import { MonthAndYearPipe } from './month-and-year/month-and-year.pipe';
+import { MonthAndYearPipe } from './month-and-year.pipe';
 
 @NgModule({
   declarations: [
