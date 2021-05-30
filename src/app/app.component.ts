@@ -19,6 +19,7 @@ export class AppComponent {
   minControl = new FormControl(toISODateString(new Date()));
   dateControl = new FormControl();
   datepickerControl = new FormControl();
+  datepickerControl1 = new FormControl();
   disabledControl = new FormControl(false);
   numberOfMonthsControl = new FormControl(1);
   monthAndYearFormatControl = new FormControl();
