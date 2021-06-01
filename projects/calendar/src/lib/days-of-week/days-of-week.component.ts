@@ -37,6 +37,6 @@ export class DaysOfWeekComponent implements OnInit {
   }
 
   private getNarrowDaysOfWeek() {
-    return getLocaleDayNames(this.locale!, FormStyle.Format, TranslationWidth.Narrow);
+    return getLocaleDayNames(this.locale!, FormStyle.Format, TranslationWidth.Abbreviated);
   }
 }

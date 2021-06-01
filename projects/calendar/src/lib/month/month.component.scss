@@ -30,12 +30,12 @@
     cursor: pointer;
 
     &--active {
-      background-color: rgba(chocolate, .4);
+      background-color: rgba(#07ffc1, 1);
     }
 
     &--selected {
-      background-color: chocolate;
-      color: white;
+      background-color: #7be1f1;
+      color: #212121;
     }
 
     &--disabled {

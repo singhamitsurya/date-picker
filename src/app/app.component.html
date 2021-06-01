@@ -1,16 +1,16 @@
 <div class="container">
-  <h2>Date Picker Library Example</h2>
+  <h2 class="bg-info">Date Picker Library Example</h2>
   <form>
     <div>
       <div>
         <label for="datepicker" class="form-control__label"
           >Select date:
         </label>
-        <em
+        <!-- <em
           libModalToggle
           [modal]="datepickerModal"
           class="bi bi-calendar"
-        ></em>
+        ></em> -->
       </div>
       <input
         type="text"
@@ -19,12 +19,13 @@
         placeholder="Select date"
         [value]="datepickerControl.value | date"
       />
-      <lib-modal #datepickerModal>
+      <!-- <lib-modal #datepickerModal> -->
         <lib-calendar
           [formControl]="datepickerControl"
+          [numberOfMonths]="2"
           id="datepicker-calendar"
         ></lib-calendar>
-      </lib-modal>
+      <!-- </lib-modal> -->
     </div>
 
     <hr />
@@ -45,8 +46,10 @@
         <lib-calendar
           [formControl]="datepickerControl1"
           id="datepicker-calendar"
+          [min]="minDate$ | async"
         ></lib-calendar>
       </lib-modal>
     </div>
+    <br><br>
   </form>
 </div>

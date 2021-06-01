@@ -4,15 +4,14 @@
           (click)="stepMonth(-1)"
           type="button"
           aria-label="Previous month"
-  >◀</button>
-  <time class="month-header__caption"
-        [dateTime]="month | date:'yyyy-MM'"
+  ><em class="bi bi-caret-left-fill"></em></button>
+  <div class="month-header__caption"
         cdkAriaLive="polite"
-  >{{month | monthAndYear:locale:monthAndYearFormat}}</time>
+  ><h4><span>{{month | monthAndYear:locale:monthAndYearFormat}}</span></h4></div>
   <button class="month-header__stepper month-header__stepper--next"
           *ngIf="showMonthStepper"
           (click)="stepMonth(1)"
           type="button"
           aria-label="Next month"
-  >▶</button>
+  ><em class="bi bi-caret-right-fill"></em></button>
 </div>
