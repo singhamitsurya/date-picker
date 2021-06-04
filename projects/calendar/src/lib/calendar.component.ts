@@ -18,7 +18,14 @@ import { getLocaleFirstDayOfWeek, WeekDay } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
-import { addMonths, areDatesInSameMonth, isValidDate, setDate, startOfDay, startOfMonth } from 'projects/calendar/src/lib/date-utils';
+import {
+  addMonths,
+  areDatesInSameMonth,
+  isValidDate,
+  setDate,
+  startOfDay,
+  startOfMonth,
+} from 'projects/calendar/src/lib/date-utils';
 import { CustomControl } from '../../../modal/src/lib/custom-control';
 
 @Component({
@@ -29,15 +36,18 @@ import { CustomControl } from '../../../modal/src/lib/custom-control';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CalendarComponent),
-      multi: true
+      multi: true,
     },
     {
       provide: CustomControl,
-      useExisting: CalendarComponent
-    }
-  ]
+      useExisting: CalendarComponent,
+    },
+  ],
 })
-export class CalendarComponent extends CustomControl<Date> implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
+export class CalendarComponent
+  extends CustomControl<Date>
+  implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit
+{
   months!: readonly Date[];
   touched = false;
   disabled = false;
@@ -50,6 +60,7 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
 
   @Input() value?: Date;
   @Input() min?: Date | null;
+  @Input() max?: Date | null;
   @Input() monthAndYearFormat?: string;
 
   // locale input is for demo purposes only - until there is an API for switching the locale at runtime
@@ -106,11 +117,13 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
     // otherwise month stepper buttons would lose focus after press
     // also avoid destroying them when changing firstMonth in multi-month view
     return this.showMonthStepper || month.getTime();
-  }
+  };
 
-  constructor(public changeDetectorRef: ChangeDetectorRef,
-              @Inject(LOCALE_ID) private localeId: string,
-              private elementRef: ElementRef) {
+  constructor(
+    public changeDetectorRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) private localeId: string,
+    private elementRef: ElementRef
+  ) {
     super();
   }
 
@@ -126,7 +139,10 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ((changes.numberOfMonths && !changes.numberOfMonths.firstChange) || (changes.firstMonth && !changes.firstMonth.firstChange)) {
+    if (
+      (changes.numberOfMonths && !changes.numberOfMonths.firstChange) ||
+      (changes.firstMonth && !changes.firstMonth.firstChange)
+    ) {
       this.months = this.getMonths();
     }
   }
@@ -189,18 +205,24 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
     };
   }
 
-  setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
-    this.changeDetectorRef.markForCheck();
-  }
+  //   setDisabledState(isDisabledFuture: boolean) {
+  //     this.disabled = isDisabledFuture;
+  //     this.changeDetectorRef.markForCheck();
+  //   }
 
   private getMonths() {
-    const firstMonth = (this.showMonthStepper ? this.activeMonth : this.firstMonth) || new Date();
+    const firstMonth =
+      (this.showMonthStepper ? this.activeMonth : this.firstMonth) ||
+      new Date();
     const startOfFirstMonth = startOfMonth(firstMonth);
-    return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
+    return Array.from({ length: this.numberOfMonths }, (_, index) =>
+      addMonths(startOfFirstMonth, index)
+    );
   }
 
   private getDefaultFirstDayOfWeek() {
-    return WeekDay[getLocaleFirstDayOfWeek(this.locale!)] as keyof typeof WeekDay;
+    return WeekDay[
+      getLocaleFirstDayOfWeek(this.locale!)
+    ] as keyof typeof WeekDay;
   }
 }

@@ -36,7 +36,9 @@ export function startOfMonth(date: Date) {
 }
 
 export function getDaysOfMonth(month: Date) {
-  return Array.from({length: numberOfDaysInMonth(month)}, (_, index) => setDate(month, index + 1));
+  return Array.from({ length: numberOfDaysInMonth(month) }, (_, index) =>
+    setDate(month, index + 1)
+  );
 }
 
 export function numberOfDaysInMonth(date: Date) {
@@ -48,48 +50,69 @@ export function isSameDate(date1: Date, date2: Date) {
 }
 
 export function areDatesInSameMonth(date1: Date, date2: Date) {
-  return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth()
+  );
 }
 
-export function isDateAfter(date1: Date, date2: Date) {
+export function isDateBefore(date1: Date, date2: Date) {
   return date1.getTime() > date2.getTime();
 }
 
+export function isDateAfter(date1: Date, date2: Date) {
+  return date1.getTime() < date2.getTime();
+}
+
 export function isValidDate(value?: any): value is Date {
-  return value instanceof Date && typeof value.getTime === 'function' && !isNaN(value.getTime());
+  return (
+    value instanceof Date &&
+    typeof value.getTime === 'function' &&
+    !isNaN(value.getTime())
+  );
 }
 
 export function toISODateString(date: Date) {
   const offset = date.getTimezoneOffset();
-  return new Date(date.getTime() - offset * 60 * 1000).toISOString().split('T')[0];
+  return new Date(date.getTime() - offset * 60 * 1000)
+    .toISOString()
+    .split('T')[0];
 }
 
 export const monthAndYearFormatOptions = {
   year: 'numeric',
-  month: 'long'
+  month: 'long',
 } as const;
 
 export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
 
 export const getFallbackLocaleMonthAndYearFormat = memoize((locale: string) => {
-  return getLocaleDateFormat(locale!, FormatWidth.Long).replace(localeDateFormatDayPart, '').trim();
+  return getLocaleDateFormat(locale!, FormatWidth.Long)
+    .replace(localeDateFormatDayPart, '')
+    .trim();
 });
 
 export const getLocaleMonthAndYearFormat = memoize((locale: string) => {
   if (Intl.DateTimeFormat.prototype.formatToParts) {
-    const monthAndYearFormatter = new Intl.DateTimeFormat(locale, monthAndYearFormatOptions);
-    return monthAndYearFormatter.formatToParts().map(({type, value}) => {
-      switch (type) {
-        case 'year':
-          return 'y';
-        case 'month':
-          return 'MMMM';
-        case 'literal':
-          return `'${value}'`;
-        default:
-          return '';
-      }
-    }).reduce((dateFormat, dateFormatPart) => dateFormat + dateFormatPart);
+    const monthAndYearFormatter = new Intl.DateTimeFormat(
+      locale,
+      monthAndYearFormatOptions
+    );
+    return monthAndYearFormatter
+      .formatToParts()
+      .map(({ type, value }) => {
+        switch (type) {
+          case 'year':
+            return 'y';
+          case 'month':
+            return 'MMMM';
+          case 'literal':
+            return `'${value}'`;
+          default:
+            return '';
+        }
+      })
+      .reduce((dateFormat, dateFormatPart) => dateFormat + dateFormatPart);
   } else {
     return getFallbackLocaleMonthAndYearFormat(locale);
   }

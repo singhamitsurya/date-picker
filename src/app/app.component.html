@@ -20,11 +20,11 @@
         [value]="datepickerControl.value | date"
       />
       <!-- <lib-modal #datepickerModal> -->
-        <lib-calendar
-          [formControl]="datepickerControl"
-          [numberOfMonths]="2"
-          id="datepicker-calendar"
-        ></lib-calendar>
+      <lib-calendar
+        [formControl]="datepickerControl"
+        [numberOfMonths]="2"
+        id="datepicker-calendar"
+      ></lib-calendar>
       <!-- </lib-modal> -->
     </div>
 
@@ -46,10 +46,11 @@
         <lib-calendar
           [formControl]="datepickerControl1"
           id="datepicker-calendar"
-          [min]="minDate$ | async"
+          [max]="maxDate$ | async"
         ></lib-calendar>
+        <!-- [min]="minDate$ | async" -->
       </lib-modal>
     </div>
-    <br><br>
+    <br /><br />
   </form>
 </div>

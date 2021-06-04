@@ -7,26 +7,40 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { WeekDay } from '@angular/common';
-import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 
-import { addDays, areDatesInSameMonth, getDaysOfMonth, isValidDate, isDateAfter, isSameDate, startOfDay } from 'projects/calendar/src/lib/date-utils';
+import {
+  addDays,
+  areDatesInSameMonth,
+  getDaysOfMonth,
+  isValidDate,
+  isDateBefore,
+  isSameDate,
+  startOfDay,
+  isDateAfter,
+} from 'projects/calendar/src/lib/date-utils';
 import { DayStepDelta } from './day-step-delta.model';
 
 export const keyCodesToDaySteps = new Map<number, DayStepDelta>([
   [RIGHT_ARROW, 1],
   [LEFT_ARROW, -1],
   [DOWN_ARROW, 7],
-  [UP_ARROW, -7]
+  [UP_ARROW, -7],
 ]);
 
 @Component({
   selector: 'lib-month',
   templateUrl: './month.component.html',
   styleUrls: ['./month.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonthComponent implements AfterViewInit, OnChanges {
   daysOfMonth!: readonly Date[];
@@ -37,6 +51,7 @@ export class MonthComponent implements AfterViewInit, OnChanges {
 
   @Input() selectedDate?: Date;
   @Input() min?: Date | null;
+  @Input() max?: Date | null;
   @Input() locale?: string;
   @Input() activeDate!: Date;
 
@@ -50,7 +65,8 @@ export class MonthComponent implements AfterViewInit, OnChanges {
     if (!this._month || !areDatesInSameMonth(this._month, month)) {
       this._month = month;
       this.daysOfMonth = getDaysOfMonth(this._month);
-      this.firstDayOfMonth = WeekDay[this.daysOfMonth[0].getDay()].toLowerCase();
+      this.firstDayOfMonth =
+        WeekDay[this.daysOfMonth[0].getDay()].toLowerCase();
     }
   }
 
@@ -64,7 +80,11 @@ export class MonthComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (Object.entries(changes).some(([input, change]) => input !== 'month' && !change.firstChange)) {
+    if (
+      Object.entries(changes).some(
+        ([input, change]) => input !== 'month' && !change.firstChange
+      )
+    ) {
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -73,8 +93,12 @@ export class MonthComponent implements AfterViewInit, OnChanges {
     return !!this.selectedDate && isSameDate(dayOfMonth, this.selectedDate);
   }
 
-  isDisabled(dayOfMonth: Date) {
-    return !!this.min && isDateAfter(this.min, dayOfMonth);
+  isDisabledPast(dayOfMonth: Date) {
+    return !!this.min && isDateBefore(this.min, dayOfMonth);
+  }
+
+  isDisabledFuture(dayOfMonth: Date) {
+    return !!this.max && isDateAfter(this.max, dayOfMonth);
   }
 
   isActive(dayOfMonth: Date) {
@@ -113,7 +137,11 @@ export class MonthComponent implements AfterViewInit, OnChanges {
   }
 
   private selectDate(date: Date) {
-    if (!this.isSelected(date) && !this.isDisabled(date)) {
+    if (
+      !this.isSelected(date) &&
+      !this.isDisabledPast(date) &&
+      !this.isDisabledFuture(date)
+    ) {
       this.selectedDateChange.emit(date);
     }
   }

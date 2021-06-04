@@ -3,13 +3,16 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
-import { startOfDay, toISODateString } from 'projects/calendar/src/lib/date-utils';
+import {
+  startOfDay,
+  toISODateString,
+} from 'projects/calendar/src/lib/date-utils';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   private readonly today = startOfDay(new Date());
@@ -17,6 +20,7 @@ export class AppComponent {
   firstDayOfWeekControl = new FormControl('');
   localeControl = new FormControl('');
   minControl = new FormControl(toISODateString(new Date()));
+  maxControl = new FormControl(toISODateString(new Date()));
   dateControl = new FormControl();
   datepickerControl = new FormControl();
   datepickerControl1 = new FormControl();
@@ -29,6 +33,7 @@ export class AppComponent {
     firstDayOfWeek: this.firstDayOfWeekControl,
     locale: this.localeControl,
     min: this.minControl,
+    max: this.maxControl,
     date: this.dateControl,
     disabled: this.disabledControl,
     numberOfMonths: this.numberOfMonthsControl,
@@ -39,24 +44,29 @@ export class AppComponent {
   minDate$ = this.minControl.valueChanges.pipe(
     startWith(this.minControl.value),
     distinctUntilChanged(),
-    map(isoDate => startOfDay(new Date(isoDate)))
+    map((isoDate) => startOfDay(new Date(isoDate)))
+  );
+  maxDate$ = this.maxControl.valueChanges.pipe(
+    startWith(this.maxControl.value),
+    distinctUntilChanged(),
+    map((isoDate) => startOfDay(new Date(isoDate)))
   );
 
   firstMonth$ = this.firstMonthControl.valueChanges.pipe(
     distinctUntilChanged(),
-    map(isoDate => new Date(isoDate))
+    map((isoDate) => new Date(isoDate))
   );
 
   constructor() {
-    this.disabledControl.valueChanges.pipe(
-      distinctUntilChanged()
-    ).subscribe(disabled => {
-      if (disabled) {
-        this.dateControl.disable();
-      } else {
-        this.dateControl.enable();
-      }
-    });
+    this.disabledControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((disabled) => {
+        if (disabled) {
+          this.dateControl.disable();
+        } else {
+          this.dateControl.enable();
+        }
+      });
   }
 
   selectToday() {
